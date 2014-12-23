@@ -10,7 +10,7 @@ class Jump:
         self.over = jump
         self.dest = end
 
-    def __eg__(self, other):
+    def __eq__(self, other):
         return self.origin == other.origin and self.over == other.over and self.dest == other.dest
 
     def __hash__(self):

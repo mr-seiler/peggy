@@ -1,4 +1,4 @@
-from jump import Jump
+from peg_game.jump import Jump
 
 
 def genHoleNames():
