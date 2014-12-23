@@ -1,5 +1,5 @@
 # get constants
-from peg_game.constants import *
+from peggy.constants import *
 
 class Board:
     """ Represents a board state using a dictionary """

@@ -1,7 +1,9 @@
+"""Package for peg game simulation code"""
+
 # import constants
-from peg_game.constants import *
+from peggy.constants import *
 # import board class
-from peg_game.board import Board
+from peggy.board import Board
 
 
 def main():
