@@ -3,9 +3,10 @@ from peggy.constants import *
 
 class Board:
     """ Represents a board state using a dictionary """
-    def __init__(self, state_dict):
+    def __init__(self, state_dict, parent=None):
         self.state = state_dict
         self._hash = hash(frozenset(self.state.items()))
+        self.parent = parent
 
     def __str__(self):
         return str(self.state)
@@ -14,7 +15,7 @@ class Board:
         return repr(self.state)
 
     def __eq__(self, other):
-        return self.state == other.state
+        return type(self) == type(other) and self.state == other.state
 
     def __hash__(self):
         return self._hash
@@ -45,11 +46,11 @@ class Board:
             return strs
 
         fmtStr = "\n".join([
-            "    {}",
-            "   {} {}",
-            "  {} {} {}",
-            " {} {} {} {}",
-            "{} {} {} {} {}"
+            "     {}     ",
+            "    {} {}    ",
+            "   {} {} {}   ",
+            "  {} {} {} {}  ",
+            " {} {} {} {} {} "
             ])
         return fmtStr.format(*getHoleStrs(self.state))
 
@@ -81,12 +82,24 @@ class Board:
         s[jump.over] = False
         s[jump.dest] = True
 
-        return Board(s)
+        return Board(s, self)
 
     def genNexts(self):
         """ Generate sequence of next valid boards from this board """
         for move in self.getValidJumps():
             yield self.doJump(move)
+
+    def getHistory(self):
+        """ Creates a list of states over time using the parent attribute,
+        which points to the state which generated this state. """
+
+        if self.parent == None:
+            return [ self ]
+        else:
+            ancestry = self.parent.getHistory()
+            ancestry.append(self)
+            return ancestry
+
 
     @staticmethod
     def genAllNexts(boardList):
