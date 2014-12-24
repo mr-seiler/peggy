@@ -17,9 +17,9 @@ some_boards = {
             'C2': True, 'D0': True, 'D1': True, 'D2': True, 'D3': True,
             'E0': True, 'E1': True, 'E2': True, 'E3': True, 'E4': True },
         # two isolated pegs (no valid moves)
-        'isle': { 'A0': False, 'B0': False, 'B1': False, 'C0': False, 'C1': False,
+        'isle': { 'A0': True, 'B0': False, 'B1': False, 'C0': False, 'C1': False,
             'C2': False, 'D0': False, 'D1': False, 'D2': False, 'D3': False,
-            'E0': False, 'E1': False, 'E2': False, 'E3': False, 'E4': False },
+            'E0': False, 'E1': False, 'E2': False, 'E3': False, 'E4': True },
         # occupied B0, C0, C1, D1, D0 (four valid moves)
         'max': { 'A0': False, 'B0': True, 'B1': False, 'C0': True, 'C1': True,
             'C2': False, 'D0': True, 'D1': True, 'D2': False, 'D3': False,
@@ -41,6 +41,13 @@ def test_startingBoards(start_hole):
     occupied = {l for l in b.state if b.state[l]}
     want_occupied = set(LABELS) - { start_hole }
     assert occupied == want_occupied
+
+def test_numPegs():
+    assert Board(some_boards['basic']).numPegs() == 14
+    assert Board(some_boards['empty']).numPegs() == 0
+    assert Board(some_boards['full']).numPegs() == 15
+    assert Board(some_boards['isle']).numPegs() == 2
+    assert Board(some_boards['max']).numPegs() == 5
 
 
 @pytest.mark.parametrize("j,ok", [
@@ -67,6 +74,14 @@ def test_getValidJumps(a_board):
         Jump('D1', 'C1', 'B1'),
         Jump('B0', 'C1', 'D2')
         }
+
+
+def test_finished():
+    assert Board(some_boards['basic']).finished() == False
+    assert Board(some_boards['empty']).finished() == True
+    assert Board(some_boards['full']).finished() == True
+    assert Board(some_boards['isle']).finished() == True
+    assert Board(some_boards['max']).finished() == False
 
 
 @pytest.mark.parametrize("j,res", [

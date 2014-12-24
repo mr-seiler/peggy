@@ -23,6 +23,13 @@ class Board:
         """ Does this board have a peg in the specified hole? """
         return self.state[hole]
 
+    def numPegs(self):
+        count = 0
+        for k in iter(self.state):
+            if self.state[k]:
+                count += 1
+        return count
+
     def pretty(self):
         """ Return nice formatted string representation of the board.
         Could maybe be implemented in __format__(self) instead? """
@@ -54,6 +61,13 @@ class Board:
     def getValidJumps(self):
         """ Get a set of jumps which are valid for this board """
         return {j for j in EVERY_JUMP if self.isValidJump(j)}
+
+    def finished(self):
+        """ this board is in a finished state when there are no valid moves """
+        return len(self.getValidJumps()) == 0
+
+    def victory(self):
+        return self.finished() and self.numPegs() == 1
 
     def doJump(self, jump):
         """ Return a new board representing the game state after executing the given jump """
